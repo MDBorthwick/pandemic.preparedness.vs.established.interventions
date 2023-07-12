@@ -1,0 +1,90 @@
+#in R
+
+#Imagine a new organization that advocates for governmental R&D funding 
+#to prevent or reduce the impact of future pandemics. 
+
+#(A) What factors would affect the organization's cost-effectiveness? 
+
+#(B) Do your best to combine the factors you selected in a back-of-the-envelope 
+#calculation that models the organization's cost-effectiveness. 
+
+#(C) Assign values to all of your factors (based on your best guess) 
+#so that the end result is a single number that describes the cost-effectiveness 
+#of this charity.*
+
+#I am assuming that this organization aims to petition for governments to allocate 
+#innovation funding like UKRI and Horizon Europe funding to pandemic preparedness. 
+
+#This means that a small amount of organizational funding has a chance to divert 
+#a large amount of additional public funding to pandemic preparedness. 
+
+#I will assume the organization is awarded a seed grant of £100k, which is the midrange
+#of the funding Charity Entrepreneurship allocates (range is 77-125k).
+
+#The goal here is to compare this intervention with other well-established interventions,
+#i.e. malaria bed nets and trachoma surgeries. 
+
+#My assumption is that petitioning for this funding has a 20% change of meaningfully 
+#allocating more resources to pandemic preparedness, which in turn has a 20% chance 
+#of meaningfully reducing the impact of a further pandemic by 5%. 
+#This seems reasonable, as funding-limited resource allocation (e.g. ventilators, PPE etc) are tractable, 
+#and contributed to covid survivability rates. 
+
+ev<-(0.2*0.2*0.05)
+print(ev)
+
+#So the expected value of this intervention is 0.2%. 
+
+#confirmed covid-19 deaths by WHO
+deaths<-6948764
+impact.deaths<-(deaths*ev)
+intervention.cost.per.life<-100000/impact.deaths
+print(impact.deaths)
+print(intervention.cost.per.life)
+
+#This means the EV impact on deaths is 13.8K deaths prevented by 100k funding. Per-life, this is £7 per life. 
+
+amf.cost.per.life<-3461
+amf.cost.per.life/intervention.cost.per.life
+
+#This has the potential to be 480 times more cost-effective than the Against Malaria Foundation's cost-per-life saved
+#via malarial bed-nets. 
+
+#Another benefit could be found through long-covid cases. Chronic sickness resulting from pandemics can affect 
+#breadwinners in developing countries. The CDC estimates that 19% of people with covid-19 develop long-covid. 
+#So 145 million people have been affected by the last pandemic. 
+
+#cdc.gov long-covid rates
+lc.rate<-0.19
+cumulative.cases<-767726861
+global.lc<-(lc.rate*cumulative.cases)
+format(global.lc, scientific = FALSE)
+
+#CDC's rate of long covid combined with WHO's case estimate means there are 145,868,104 long-covid cases worldwide.
+#Our EV for preventing these cases means that our investment could prevent 1.5 million cases. 
+
+cumulative.cases.ev<-(cumulative.cases*ev)
+print(cumulative.cases.ev)
+
+#I'm attempting to compare this to another chronic disease that affects people's economic output, e.g. blindness. 
+#This forum post collates a number of opinions and suggests that it costs ~$100 (£77) to cure Trachoma-based blindness, a 
+#cause area where is ample scope for more  funding.
+#https://forum.effectivealtruism.org/posts/SMRHnGXirRNpvB8LJ/fact-checking-comparison-between-trachoma-surgeries-and
+
+lc.cost.effectiveness<-(100000/cumulative.cases.ev)
+print(lc.cost.effectiveness)
+
+#The EV of preventing a chronic disease is 6p, or 440 times higher ev than trachoma surgery. 
+
+#You have asked for a single number that combines the cost effectiveness of this charity. 
+#I'll estimate that preventing chronic illness is 1/10th as valuable as preventing a death. 
+
+impact.lc<-(cumulative.cases.ev*0.1)
+impact<-(impact.deaths+impact.lc)
+print(impact)
+
+Total.EV.Lives.Saved<-impact
+print(Total.EV.Lives.Saved)
+
+Total.CE.Compared.To.EA.Alternative<-(intervention.cost.per.life+(lc.cost.effectiveness*0.1))
+print(Total.CE.Compared.To.EA.Alternative)
